@@ -543,4 +543,789 @@
   </script>
 
 </body> MEDRA VOUS REMERCIE.
-  </html>
+  </html>```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEDRA - Le marché de proximité</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      color: #222;
+      padding-bottom: 100px;
+    }
+
+    header {
+      background-color: #111;
+      color: white;
+      padding: 15px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 { color: #FFC107; font-size: 24px; letter-spacing: 2px; }
+    header p { font-size: 12px; color: #aaa; margin-top: 3px; }
+
+    .btn-admin {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #FFC107;
+      color: #111;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #222;
+      position: sticky;
+      top: 70px;
+      z-index: 99;
+    }
+    nav button {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #aaa;
+      padding: 15px 10px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+    nav button.active {
+      color: #FFC107;
+      border-bottom: 3px solid #FFC107;
+    }
+
+    .page { display: none; padding: 20px; max-width: 800px; margin: 0 auto; }
+    .page.active { display: block; }
+
+    h2.section-titre {
+      color: #111;
+      font-size: 20px;
+      margin-bottom: 15px;
+      border-left: 5px solid #FFC107;
+      padding-left: 10px;
+    }
+
+    .grille-produits {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .carte-produit {
+      background-color: white;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      position: relative;
+    }
+    .carte-produit img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background-color: #eee;
+    }
+    .carte-produit h3 { font-size: 15px; color: #111; margin-bottom: 5px; }
+    .carte-produit .prix { color: #FFC107; font-weight: bold; font-size: 14px; margin-bottom: 10px; }
+    .carte-produit button {
+      background-color: #FFC107;
+      color: #111;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn-suppr {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: #e74c3c !important;
+      color: white !important;
+      border-radius: 50% !important;
+      width: 28px;
+      height: 28px;
+      padding: 0 !important;
+      font-size: 14px !important;
+    }
+
+    .panier {
+      background-color: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+    .panier h2 { color: #111; font-size: 18px; margin-bottom: 15px; }
+    .ligne-panier {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    .panier-vide { color: #999; font-style: italic; font-size: 14px; }
+    .total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 18px;
+      font-weight: bold;
+      color: #111;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 2px solid #FFC107;
+    }
+
+    .barre-commande {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background-color: #111;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 200;
+    }
+    .barre-commande .info { color: white; font-size: 14px; }
+    .barre-commande .info strong { color: #FFC107; font-size: 18px; }
+    .barre-commande button {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .barre-commande button:disabled { background-color: #555; }
+
+    .histoire-bloc {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .histoire-bloc h3 { color: #FFC107; margin-bottom: 10px; font-size: 17px; }
+    .histoire-bloc p { font-size: 14px; line-height: 1.6; color: #444; }
+    .valeur {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      background: #f9f9f9;
+      padding: 12px;
+      border-radius: 8px;
+    }
+    .valeur .icone { font-size: 28px; margin-right: 12px; }
+    .valeur .texte { font-size: 14px; }
+
+    .contact-carte {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .contact-carte .icone { font-size: 40px; margin-bottom: 10px; }
+    .contact-carte h3 { color: #111; margin-bottom: 10px; font-size: 17px; }
+    .contact-carte p { color: #555; font-size: 14px; line-height: 1.5; }
+    .btn-whatsapp {
+      display: inline-block;
+      background-color: #25D366;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      font-size: 12px;
+    }
+    footer strong { color: #FFC107; }
+
+    /* ===== PANNEAU ADMIN ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 300;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .modal.active { display: block; }
+    .modal-contenu {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 500px;
+      margin: 30px auto;
+    }
+    .modal-contenu h2 {
+      color: #111;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    .modal-contenu label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #333;
+    }
+    .modal-contenu input[type="text"],
+    .modal-contenu input[type="number"],
+    .modal-contenu input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .modal-contenu button {
+      background-color: #FFC107;
+      color: #111;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .modal-contenu .btn-fermer {
+      background-color: #ddd;
+      color: #333;
+    }
+    .apercu-photo {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background: #eee;
+      display: none;
+    }
+    .apercu-photo.visible { display: block; }
+
+    .liste-admin {
+      margin-top: 20px;
+      border-top: 2px solid #eee;
+      padding-top: 15px;
+    }
+    .liste-admin h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .item-admin {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .item-admin img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    .item-admin .nom {
+      flex: 1;
+      text-align: left;
+    }
+    .item-admin button {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+    }
+
+    .notif {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #25D366;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-weight: bold;
+      z-index: 400;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .notif.visible { opacity: 1; }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>MEDRA</h1>
+    <p>La vie est déjà assez compliquée. Nous, on la simplifie.</p>
+    <button class="btn-admin" onclick="ouvrirAdmin()">⚙️ Admin</button>
+  </header>
+
+  <nav>
+    <button id="btn-accueil" class="active" onclick="afficherPage('accueil')">🛒 Boutique</button>
+    <button id="btn-histoire" onclick="afficherPage('histoire')">📖 Notre Histoire</button>
+    <button id="btn-contact" onclick="afficherPage('contact')">📞 Contact</button>
+  </nav>
+
+  <!-- PAGE 1 : BOUTIQUE -->
+  <div id="page-accueil" class="page active">
+    <h2 class="section-titre">Nos produits</h2>
+    <div class="grille-produits" id="grille-produits"></div>
+
+    <h2 class="section-titre">Mon panier</h2>
+    <div class="panier">
+      <div id="contenu-panier">
+        <p class="panier-vide">Votre panier est vide pour le moment.</p>
+      </div>
+      <div class="total">
+        <span>Total :</span>
+        <span id="total">0 GNF</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 : HISTOIRE -->
+  <div id="page-histoire" class="page">
+    <h2 class="section-titre">Notre Histoire</h2>
+
+    <div class="histoire-bloc">
+      <h3>🌍 Qui sommes-nous ?</h3>
+      <p>MEDRA est née d'un constat simple : en Afrique, acheter est trop compliqué, trop lent, trop fatigant. Les mamans perdent des heures au marché, sous la pluie ou le soleil, à chercher des condiments à prix élevé.</p>
+    </div>
+
+    <div class="histoire-bloc">
+      <h3>🎯 Notre Mission</h3>
+      <p>Simplifier la vie des gens. Rendre les produits essentiels accessibles, abordables et disponibles partout, tout le temps. À 2 mètres de chaque Africain, 24h/24.</p>
+    </div>
+
+    <div class="histoire-bloc">
+      <h3>🚀 Notre Vision</h3>
+      <p>Devenir le plus grand distributeur d'Afrique. Commencer par un petit magasin de condiments à Matoto, puis grandir, brique par brique, jusqu'à servir 1,4 milliard de personnes.</p>
+    </div>
+
+    <h2 class="section-titre">Nos Valeurs</h2>
+    <div class="histoire-bloc">
+      <div class="valeur"><div class="icone">👑</div><div class="texte"><strong>Le client est le patron.</strong> Chaque décision se prend en pensant à lui.</div></div>
+      <div class="valeur"><div class="icone">💪</div><div class="texte"><strong>On se relève plus vite qu'on ne tombe.</strong> Les erreurs sont des leçons.</div></div>
+      <div class="valeur"><div class="icone">💰</div><div class="texte"><strong>Zéro gaspillage.</strong> Chaque franc économisé est un franc pour le client.</div></div>
+      <div class="valeur"><div class="icone">🤝</div><div class="texte"><strong>Le travail d'équipe fait la force.</strong> On construit ensemble.</div></div>
+      <div class="valeur"><div class="icone">🏛️</div><div class="texte"><strong>MEDRA est là pour 100 ans.</strong> On construit pour les générations futures.</div></div>
+    </div>
+  </div>
+
+  <!-- PAGE 3 : CONTACT -->
+  <div id="page-contact" class="page">
+    <h2 class="section-titre">Contact & Livraison</h2>
+
+    <div class="contact-carte">
+      <div class="icone">📱</div>
+      <h3>Commander par WhatsApp</h3>
+      <p>Le plus simple. Un message, et on s'occupe de tout.</p>
+      <a href="https://wa.me/224620000000?text=Bonjour%20Medra%2C%20je%20souhaite%20commander." class="btn-whatsapp" target="_blank">Ouvrir WhatsApp</a>
+    </div>
+
+    <div class="contact-carte">
+      <div class="icone">🛵</div>
+      <h3>Livraison à domicile</h3>
+      <p>Livraison rapide à Matoto et alentours.<br>Commandez avant 18h, livré le jour même.<br>Livraison gratuite dès 10 000 GNF d'achat.</p>
+    </div>
+
+    <div class="contact-carte">
+      <div class="icone">🕐</div>
+      <h3>Horaires</h3>
+      <p>Ouvert 7j/7<br>De 6h00 à 22h00<br><em>(Bientôt 24h/24)</em></p>
+    </div>
+
+    <div class="contact-carte">
+      <div class="icone">📍</div>
+      <h3>Nous trouver</h3>
+      <p>Matoto, Conakry, Guinée<br>Quartier : à préciser</p>
+    </div>
+
+    <div class="contact-carte">
+      <div class="icone">💳</div>
+      <h3>Paiement</h3>
+      <p>Espèces à la livraison<br>Orange Money / MTN Money<br><em>(MedraPay bientôt disponible)</em></p>
+    </div>
+  </div>
+
+  <!-- BARRE DE COMMANDE -->
+  <div class="barre-commande">
+    <div class="info"><strong id="nb-articles">0</strong> article(s)</div>
+    <button id="btn-commander" onclick="commander()" disabled>Commander sur WhatsApp</button>
+  </div>
+
+  <!-- PANNEAU ADMIN -->
+  <div class="modal" id="modal-admin">
+    <div class="modal-contenu">
+      <h2>⚙️ Gestion des produits</h2>
+
+      <label>Nom du produit</label>
+      <input type="text" id="input-nom" placeholder="Ex: Piment en poudre">
+
+      <label>Prix (GNF)</label>
+      <input type="number" id="input-prix" placeholder="Ex: 1500">
+
+      <label>Photo (depuis ta galerie)</label>
+      <input type="file" id="input-photo" accept="image/*">
+      <img id="apercu" class="apercu-photo" alt="Aperçu">
+
+      <button onclick="ajouterProduit()">➕ Ajouter le produit</button>
+      <button class="btn-fermer" onclick="fermerAdmin()">Fermer</button>
+
+      <div class="liste-admin">
+        <h3>Produits actuels</h3>
+        <div id="liste-produits-admin"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION -->
+  <div class="notif" id="notif">Produit ajouté !</div>
+
+  <footer>
+    <p>MEDRA - <strong>Construire aujourd'hui ce que l'Afrique utilisera demain.</strong></p>
+    <p>&copy; 2026 Dramey - Tous droits réservés.</p>
+  </footer>
+
+  <script>
+    // ============================================================
+    // ⚠️ CHANGE TON NUMÉRO WHATSAPP ICI
+    // ============================================================
+    const NUMERO_WHATSAPP = "224620000000";
+
+
+    // ============================================================
+    // PRODUITS PAR DÉFAUT (utilisés la première fois)
+    // ============================================================
+    const PRODUITS_DEFAUT = [
+      { nom: "Piment en poudre", prix: 1500, image: "https://images.unsplash.com/photo-1583119022894-919a68a3d0e3?w=400" },
+      { nom: "Ail en poudre", prix: 1200, image: "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?w=400" },
+      { nom: "Oignon frais", prix: 2000, image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400" },
+      { nom: "Tomate fraîche", prix: 2500, image: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400" },
+      { nom: "Cube Maggi (x5)", prix: 2000, image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400" },
+      { nom: "Sel de cuisine", prix: 800, image: "https://images.unsplash.com/photo-1518110925495-cf5b6b0c0a5c?w=400" },
+      { nom: "Gingembre", prix: 1800, image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=400" },
+      { nom: "Huile de cuisson", prix: 5000, image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400" }
+    ];
+
+
+    // ============================================================
+    // CHARGEMENT DES PRODUITS (depuis localStorage)
+    // ============================================================
+    let produits = [];
+
+    function chargerProduits() {
+      const sauvegarde = localStorage.getItem('medra_produits');
+      if (sauvegarde) {
+        produits = JSON.parse(sauvegarde);
+      } else {
+        produits = [...PRODUITS_DEFAUT];
+        sauvegarderProduits();
+      }
+    }
+
+    function sauvegarderProduits() {
+      localStorage.setItem('medra_produits', JSON.stringify(produits));
+    }
+
+
+    // ============================================================
+    // AFFICHAGE DES PRODUITS
+    // ============================================================
+    function afficherProduits() {
+      const grille = document.getElementById('grille-produits');
+      let html = '';
+
+      if (produits.length === 0) {
+        grille.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999; padding: 20px;">Aucun produit pour le moment. Clique sur ⚙️ Admin pour en ajouter.</p>';
+        return;
+      }
+
+      produits.forEach(function(produit, index) {
+        html += '<div class="carte-produit">';
+        html += '<img src="' + produit.image + '" alt="' + produit.nom + '">';
+        html += '<h3>' + produit.nom + '</h3>';
+        html += '<p class="prix">' + produit.prix.toLocaleString('fr-FR') + ' GNF</p>';
+        html += '<button onclick="ajouterAuPanier(' + index + ')">Ajouter</button>';
+        html += '</div>';
+      });
+
+      grille.innerHTML = html;
+    }
+
+
+    // ============================================================
+    // PANIER
+    // ============================================================
+    let panier = [];
+
+    function ajouterAuPanier(index) {
+      const produit = produits[index];
+      panier.push({ nom: produit.nom, prix: produit.prix });
+      afficherPanier();
+      afficherNotif(produit.nom + " ajouté !");
+    }
+
+    function afficherPanier() {
+      const contenu = document.getElementById('contenu-panier');
+      const totalElement = document.getElementById('total');
+      const nbArticles = document.getElementById('nb-articles');
+      const btnCommander = document.getElementById('btn-commander');
+
+      if (panier.length === 0) {
+        contenu.innerHTML = '<p class="panier-vide">Votre panier est vide pour le moment.</p>';
+        totalElement.textContent = '0 GNF';
+        nbArticles.textContent = '0';
+        btnCommander.disabled = true;
+        return;
+      }
+
+      let html = '';
+      let total = 0;
+
+      panier.forEach(function(produit) {
+        html += '<div class="ligne-panier">';
+        html += '<span>' + produit.nom + '</span>';
+        html += '<span>' + produit.prix.toLocaleString('fr-FR') + ' GNF</span>';
+        html += '</div>';
+        total += produit.prix;
+      });
+
+      contenu.innerHTML = html;
+      totalElement.textContent = total.toLocaleString('fr-FR') + ' GNF';
+      nbArticles.textContent = panier.length;
+      btnCommander.disabled = false;
+    }
+
+
+    // ============================================================
+    // COMMANDER SUR WHATSAPP
+    // ============================================================
+    function commander() {
+      if (panier.length === 0) {
+        alert("Votre panier est vide.");
+        return;
+      }
+
+      let message = "Bonjour Medra, je souhaite commander :%0A";
+      let total = 0;
+
+      panier.forEach(function(produit) {
+        message += "- " + produit.nom + " : " + produit.prix + " GNF%0A";
+        total += produit.prix;
+      });
+
+      message += "%0ATotal : " + total + " GNF";
+      message += "%0A%0AMerci de me confirmer la disponibilité.";
+
+      window.open("https://wa.me/" + NUMERO_WHATSAPP + "?text=" + message, "_blank");
+    }
+
+
+    // ============================================================
+    // NAVIGATION ENTRE LES PAGES
+    // ============================================================
+    function afficherPage(nom) {
+      document.querySelectorAll('.page').forEach(function(p) {
+        p.classList.remove('active');
+      });
+      document.querySelectorAll('nav button').forEach(function(b) {
+        b.classList.remove('active');
+      });
+
+      document.getElementById('page-' + nom).classList.add('active');
+      document.getElementById('btn-' + nom).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+
+    // ============================================================
+    // PANNEAU ADMIN
+    // ============================================================
+    let photoBase64 = "";
+
+    function ouvrirAdmin() {
+      document.getElementById('modal-admin').classList.add('active');
+      afficherListeAdmin();
+    }
+
+    function fermerAdmin() {
+      document.getElementById('modal-admin').classList.remove('active');
+      document.getElementById('input-nom').value = '';
+      document.getElementById('input-prix').value = '';
+      document.getElementById('input-photo').value = '';
+      document.getElementById('apercu').classList.remove('visible');
+      photoBase64 = "";
+    }
+
+    // Aperçu de la photo sélectionnée + compression
+    document.getElementById('input-photo').addEventListener('change', function(e) {
+      const fichier = e.target.files[0];
+      if (!fichier) return;
+
+      const lecteur = new FileReader();
+      lecteur.onload = function(event) {
+        // Compression de l'image
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const MAX = 600;
+          let largeur = img.width;
+          let hauteur = img.height;
+
+          if (largeur > hauteur) {
+            if (largeur > MAX) {
+              hauteur = hauteur * MAX / largeur;
+              largeur = MAX;
+            }
+          } else {
+            if (hauteur > MAX) {
+              largeur = largeur * MAX / hauteur;
+              hauteur = MAX;
+            }
+          }
+
+          canvas.width = largeur;
+          canvas.height = hauteur;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, largeur, hauteur);
+
+          photoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          document.getElementById('apercu').src = photoBase64;
+          document.getElementById('apercu').classList.add('visible');
+        };
+        img.src = event.target.result;
+      };
+      lecteur.readAsDataURL(fichier);
+    });
+
+    // Ajouter un produit
+    function ajouterProduit() {
+      const nom = document.getElementById('input-nom').value.trim();
+      const prix = parseInt(document.getElementById('input-prix').value);
+
+      if (!nom) { alert("Écris le nom du produit."); return; }
+      if (!prix || prix <= 0) { alert("Écris un prix valide."); return; }
+      if (!photoBase64) { alert("Choisis une photo depuis ta galerie."); return; }
+
+      produits.push({ nom: nom, prix: prix, image: photoBase64 });
+      sauvegarderProduits();
+      afficherProduits();
+      afficherListeAdmin();
+
+      // Réinitialiser
+      document.getElementById('input-nom').value = '';
+      document.getElementById('input-prix').value = '';
+      document.getElementById('input-photo').value = '';
+      document.getElementById('apercu').classList.remove('visible');
+      photoBase64 = "";
+
+      afficherNotif("Produit ajouté !");
+    }
+
+    // Supprimer un produit
+    function supprimerProduit(index) {
+      if (!confirm("Supprimer ce produit ?")) return;
+      produits.splice(index, 1);
+      sauvegarderProduits();
+      afficherProduits();
+      afficherListeAdmin();
+      afficherNotif("Produit supprimé.");
+    }
+
+    // Afficher la liste dans le panneau admin
+    function afficherListeAdmin() {
+      const liste = document.getElementById('liste-produits-admin');
+      if (produits.length === 0) {
+        liste.innerHTML = '<p style="color:#999; font-size:14px;">Aucun produit.</p>';
+        return;
+      }
+
+      let html = '';
+      produits.forEach(function(produit, index) {
+        html += '<div class="item-admin">';
+        html += '<img src="' + produit.image + '">';
+        html += '<span class="nom"><strong>' + produit.nom + '</strong><br>' + produit.prix.toLocaleString('fr-FR') + ' GNF</span>';
+        html += '<button onclick="supprimerProduit(' + index + ')">🗑️</button>';
+        html += '</div>';
+      });
+      liste.innerHTML = html;
+    }
+
+
+    // ============================================================
+    // NOTIFICATION
+    // ============================================================
+    function afficherNotif(texte) {
+      const notif = document.getElementById('notif');
+      notif.textContent = texte;
+      notif.classList.add('visible');
+      setTimeout(function() {
+        notif.classList.remove('visible');
+      }, 2000);
+    }
+
+
+    // ============================================================
+    // DÉMARRAGE
+    // ============================================================
+    chargerProduits();
+    afficherProduits();
+    afficherPanier();
+
+  </script>
+
+</body>
+</html>
+```
+
